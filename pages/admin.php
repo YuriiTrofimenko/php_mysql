@@ -117,20 +117,20 @@
          <!-- section C: for form Hotels -->
          <?php
          echo '<form action="index.php?page=4" method="post" class="input-group" id="formhotel">';
-         $sel = 'SELECT ci.id, ci.city, ho.stars, ho.info, co.id, co.country from cities ci, hotels ho, countries co WHERE ho.cityid=ci.id and ho.countryid=co.id';
+         $sel = 'SELECT ho.id, ci.city, ho.hotel, ho.stars, ho.info, co.id, co.country from cities ci, hotels ho, countries co WHERE ho.cityid=ci.id and ho.countryid=co.id';
          $res = mysqli_query($link, $sel);
          $err = mysqli_errno($link);
          echo '<table class="table" width="100%">';
          
          while ($row = mysqli_fetch_array($res)) {
-             var_dump($row);
-             /*echo '<tr>';
+             //var_dump($row);
+             echo '<tr>';
+             echo '<td>' . $row[0] . '</td>';
+             echo '<td>' . $row[1] . "-" . $row[6] . '</td>';
              echo '<td>' . $row[2] . '</td>';
-             echo '<td>' . $row[1] . "-" . $row[9] . '</td>';
              echo '<td>' . $row[3] . '</td>';
-             echo '<td>' . $row[6] . '</td>';
-             echo '<td><input type="checkbox" name="hb' . $row[2] . '"></td>';
-             echo '</tr>';*/
+             echo '<td><input type="checkbox" name="hb' . $row[0] . '"></td>';
+             echo '</tr>';
          }
          echo '</table>';
          mysqli_free_result($res);
@@ -187,10 +187,41 @@
              echo "window.location=document.URL;";
              echo "</script>";
          }
-         mysqli_close($link);
          ?>
     </div>
     <div class=" col-sm-6 col-md-6 col-lg-6 right ">
          <!-- section D: for form Images -->
+         <?php
+        echo '<form action="index.php?page=4" method="post" enctype="multipart/form-data" class="input-group">';
+         echo '<select name="hotelid">';
+         $sel = 'select ho.id, co.country,ci.city,ho.hotel from countries co,cities ci, hotels ho where co.id=ho.countryid and ci.id=ho.cityid order by co.country';
+         $res = mysqli_query($link, $sel);
+         while($row = mysqli_fetch_array($res)) {
+             echo '<option value="' . $row[0] . '">';
+             echo $row[1] . '&nbsp;&nbsp;' . $row[2] . '&nbsp;&nbsp;'
+                     . $row[3]
+                     . '</option>';
+         }
+         mysqli_free_result($res);
+         echo '<input type="file" name="file[]" multiple accept="image/*">';
+         echo '<input type="submit" name="addimage" value="Add" class="btn btn-sm btn-info">';
+         echo '</select>';
+         echo '</form>';
+         if(isset($_REQUEST['addimage'])) {
+             foreach($_FILES['file']['name'] as $k => $v) {
+                 if ($_FILES['file']['error'][$k] != 0) {
+                     echo '<script>alert("Upload file error:' . $v . '")</script>';
+                     continue;
+                 }
+                 if(move_uploaded_file($_FILES['file']
+                 ['tmp_name'][$k], 'images/'.$v)) {
+                     $ins = 'insert into images(hotelid,imagepath) values('.$_REQUEST['hotelid'] . ',"images/' . $v . '")';
+                     mysqli_query($link, $ins);
+                 }
+             }
+         }
+         echo '</div>';
+         mysqli_close($link);
+         ?>
     </div>
 </div>

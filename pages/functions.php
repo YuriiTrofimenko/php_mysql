@@ -29,7 +29,7 @@ function register($name, $pass, $email) {
             . '","' . $email . '",2)';
     $link = connect();
     mysqli_query($link, $ins);
-    $err = mysqli_errno();
+    $err = mysqli_errno($link);
     if ($err) {
         if ($err == 1062) {
             echo "<h3/><span style='color:red;'>This Login Is Already Taken!</span><h3/>";
