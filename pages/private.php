@@ -36,17 +36,20 @@ if (isset($_POST['addadmin'])) {
     //var_dump($result);
 }
 
+//TODO 1. Добавить кнопку "убрать из админов" и обработчик к ней
+
 $sel='select * from users where roleid = 1 order by login';
 $res=mysqli_query($link, $sel);
 echo '<table class="table table-striped">';
 while($row=mysqli_fetch_array($res)){
 echo '<tr>';
-echo '<td>'.$row[0].'</td>';
-echo '<td>'.$row[1].'</td>';
-echo '<td>'.$row[3].'</td>';
-$img = base64_encode($row[6]);
+echo '<td>'.$row['id'].'</td>';
+echo '<td>'.$row['login'].'</td>';
+echo '<td>'.$row['email'].'</td>';
+$img = base64_encode($row['avatar']);
 echo '<td><img height="100px"
 src="data:image/jpeg; base64,'.$img.'"/></td>';
+echo '<td><input type="checkbox" name="ab'.$row['id'].'"></td>';
 }
 mysqli_free_result($res);
 echo '</table>';
