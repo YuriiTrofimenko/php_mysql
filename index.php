@@ -1,5 +1,5 @@
 <?php
-/*session_start();*/
+session_start();
 include_once("pages/functions.php");
 //echo connect();
 ?>
@@ -16,7 +16,7 @@ include_once("pages/functions.php");
         <div class="container">
             <div class="row">
                 <header class="col-sm-12 col-md-12 col-lg-12">
-
+                     <?php include_once("pages/login.php");?>
                 </header>
             </div>
         </div>
@@ -50,6 +50,13 @@ include_once("pages/functions.php");
                                     include_once('pages/admin.php');
                                     break;
                                 }
+                            case 5 : {
+                                    if (isset($_SESSION['radmin'])) {
+                                        include_once('pages/private.php');
+                                        break;
+                                    }
+                                }
+                            default : {echo '<span>Error 404</span>'; }
                         }
                     }
                     ?>

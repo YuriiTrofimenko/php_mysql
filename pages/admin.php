@@ -3,6 +3,11 @@
         <!-- section A: for form Countries -->
         <?php
         
+        if (!isset($_SESSION['radmin'])) {
+            echo "<h3/><span style='color:red;'>For Administrators Only!</span><h3/>";
+            exit();
+        }
+
         /* db */
         $link = connect();
         $sel='select * from countries';

@@ -44,3 +44,35 @@ function register($name, $pass, $email) {
 
     return true;
 }
+
+function login($name, $pass) {
+    
+    $name = trim(htmlspecialchars($name));
+    $pass = trim(htmlspecialchars($pass));
+    if ($name == "" || $pass == "") {
+        echo "<h3/><span style='color:red;'>
+Fill All Required Fields!</span><h3/>";
+        return false;
+    }
+    if (strlen($name) < 3 || strlen($name) > 30 ||
+            strlen($pass) < 3 || strlen($pass) > 30) {
+        echo "<h3/><span style='color:red;'>
+Value Length Must Be Between 3 And 30!
+</span><h3/>";
+        return false;
+    }
+    $link = connect();
+    $sel = 'select * from users where login="' . $name . '" and pass="' . md5($pass) . '"';
+    $res = mysqli_query($link, $sel);
+    if ($row = mysqli_fetch_array($res)) {
+        $_SESSION['ruser'] = $name;
+        if ($row['roleid'] == 1) {
+            $_SESSION['radmin'] = $name;
+        }
+        return true;
+    } else {
+        echo "<h3/><span style='color:red;'>
+No Such User!</span><h3/>";
+        return false;
+    }
+}
